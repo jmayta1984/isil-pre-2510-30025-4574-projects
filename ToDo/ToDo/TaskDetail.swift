@@ -12,6 +12,8 @@ struct TaskDetail: View {
     @State var title = ""
     @State var description = ""
     
+    @Environment(\.dismiss) var dismiss
+    
     var onSave: (Task) -> Void = { _ in }
     
     var body: some View {
@@ -28,6 +30,7 @@ struct TaskDetail: View {
                 Button(action: {
                     let task = Task(title: title, description: description, createdAt: Date())
                     onSave(task)
+                    dismiss()
                 }) {
                     Text("Save")
                 }
