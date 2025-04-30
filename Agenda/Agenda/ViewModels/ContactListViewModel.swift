@@ -19,6 +19,8 @@ class ContactListViewModel: ObservableObject {
     }
     
     func updateContact(contact: Contact){
-        
+        contacts = contacts.map { it in
+            it.id == contact.id ? contact : it
+        }
     }
 }

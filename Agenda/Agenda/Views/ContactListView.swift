@@ -17,19 +17,10 @@ struct ContactListView: View {
     var body: some View {
         NavigationStack {
             List {
-                ForEach(viewModel.contacts) { contact in
-                    HStack {
-                        Text(contact.name)
-                    }
-                    .onTapGesture {
-                        showDetail = true
-                        selectedContact = contact
-                    }
-                    
-                }
-                .onDelete { indexSet in
-                    viewModel.deleteContact(at: indexSet)
-                }
+                ContactList(
+                    showDetail: $showDetail,
+                    selectedContact: $selectedContact,
+                    viewModel: viewModel)
             }
             .navigationTitle(Text("Agenda"))
             .toolbar {
@@ -43,19 +34,45 @@ struct ContactListView: View {
                 }
             }
             .sheet(isPresented: $showDetail) {
+                
                 ContactDetailView (
-                    contact: selectedContact,
-                    onUpdate: { contact in
-                        viewModel.updateContact(contact: contact)
-                    },
-                    onAdd: { contact in
-                        viewModel.addContact(contact: contact)
+                    contact: selectedContact) { contact in
+                        if (selectedContact == nil) {
+                            viewModel.addContact(contact: contact)
+                        } else {
+                            viewModel.updateContact(contact: contact)
+                        }
                     }
-                )
+                
+                
             }
         }
     }
 }
+
+struct ContactList: View {
+    @Binding var showDetail: Bool
+    @Binding var selectedContact: Contact?
+    @ObservedObject var viewModel: ContactListViewModel
+    var body: some View {
+        ForEach(viewModel.contacts) { contact in
+            HStack {
+                Text(contact.name)
+            }
+            .onTapGesture {
+                showDetail = true
+                selectedContact = contact
+            }
+            
+        }
+        .onDelete { indexSet in
+            viewModel.deleteContact(at: indexSet)
+        }
+        
+        
+    }
+}
+
 
 #Preview {
     ContactListView()

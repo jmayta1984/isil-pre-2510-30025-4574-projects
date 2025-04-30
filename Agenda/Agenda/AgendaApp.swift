@@ -11,7 +11,7 @@ import SwiftUI
 struct AgendaApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContactListView()
         }
     }
 }

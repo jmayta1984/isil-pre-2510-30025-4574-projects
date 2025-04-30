@@ -8,9 +8,9 @@
 import Foundation
 
 struct Contact: Identifiable {
-    let id: UUID = UUID()
-    var name: String
-    var company: String
-    var phone: String
+    let id: UUID
+    let name: String
+    let company: String
+    let phone: String
     
 }

@@ -16,8 +16,7 @@ struct ContactDetailView: View {
     @State var contact: Contact?
     
     @Environment(\.dismiss) var dismiss
-    var onUpdate: (Contact) -> Void = {_ in }
-    var onAdd: (Contact) -> Void = {_ in }
+    var onSave: (Contact) -> Void = {_ in }
     
     var body: some View {
         
@@ -33,17 +32,14 @@ struct ContactDetailView: View {
             .toolbar {
                 ToolbarItem {
                     Button(action: {
-                       
-                        if let contact = contact {
-                            
-                            onUpdate(contact)
-                        } else {
-                            onAdd(Contact(
-                                name: name,
-                                company: company,
-                                phone: phone))
-                        }
-                       
+                        
+                        let id = contact?.id ?? UUID()
+                        onSave(Contact(
+                            id: id,
+                            name: name,
+                            company: company,
+                            phone: phone))
+                        
                         dismiss()
                     }) {
                         Text("Save")
