@@ -8,7 +8,7 @@
 import Foundation
 
 class CounterViewModel: ObservableObject {
-    @Published var count = 0
+    @Published private(set) var count = 0
     
     func increaseCount() {
         count += 1
