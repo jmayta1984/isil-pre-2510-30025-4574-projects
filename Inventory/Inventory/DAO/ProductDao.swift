@@ -20,8 +20,8 @@ struct ProductDao {
         }
     }
     
-    func fetchProducts() -> [Product]  {
-        let request: NSFetchRequest<Product> =  Product.fetchRequest()
+    func fetchProducts() -> [ProductEntity]  {
+        let request: NSFetchRequest<ProductEntity> =  ProductEntity.fetchRequest()
         
         do {
             return try context.fetch(request)
@@ -32,9 +32,44 @@ struct ProductDao {
         
     }
     
-    func addProduct(name: String) {
-        let product = Product(context: context)
-        product.name = name
+    func addProduct(product: Product) {
+        let productEntity = ProductEntity(context: context)
+        productEntity.id = product.id
+        productEntity.name = product.name
+        productEntity.quantity = product.quantity
         saveContext()
+    }
+    
+    func removeProduct(product: Product) {
+        let request: NSFetchRequest<ProductEntity> =  ProductEntity.fetchRequest()
+        request.predicate = NSPredicate(format: " id = %@", product.id as CVarArg)
+        
+        do {
+            if let productEntity = try context.fetch(request).first {
+                context.delete(productEntity)
+                saveContext()
+            }
+        } catch let error {
+            print(error.localizedDescription)
+        }
+        
+        
+    }
+    
+    func updateProduct(product: Product) {
+        let request: NSFetchRequest<ProductEntity> =  ProductEntity.fetchRequest()
+        request.predicate = NSPredicate(format: " id = %@", product.id as CVarArg)
+        
+        do {
+            if let productEntity = try context.fetch(request).first {
+                productEntity.name = product.name
+                productEntity.quantity = product.quantity
+                saveContext()
+            }
+        } catch let error {
+            print(error.localizedDescription)
+        }
+        
+        
     }
 }
