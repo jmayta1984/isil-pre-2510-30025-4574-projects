@@ -9,13 +9,18 @@ import SwiftUI
 
 struct TaskListView: View {
     @StateObject var viewModel = TaskListViewModel()
-
-    
+  
     var body: some View {
         NavigationStack {
             List {
                 ForEach(viewModel.tasks){ task in
                     Text(task.name)
+                        .onTapGesture {
+                            viewModel.selectedTask = task
+                        }
+                }
+                .onDelete { indexSet in
+                    viewModel.deleteTask(indexSet: indexSet)
                 }
             }
             .navigationTitle("To do")
@@ -33,6 +38,11 @@ struct TaskListView: View {
             .sheet(isPresented: $viewModel.showDetail) {
                 TaskDetailView { task in
                     viewModel.addTask(task: task)
+                }
+            }
+            .sheet(item: $viewModel.selectedTask) { selectedtask in
+                TaskDetailView(selectedTask: selectedtask) { task in
+                    viewModel.updateTask(task: task)
                 }
             }
         }

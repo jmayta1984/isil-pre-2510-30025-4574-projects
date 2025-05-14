@@ -11,6 +11,13 @@ struct TaskDetailView: View {
     
     @Environment(\.dismiss) var dismiss
     @StateObject var viewModel =  TaskDetailViewModel()
+
+    var selectedTask: Task? = nil
+    
+    var title: String {
+        selectedTask == nil ? "New task" : "Update task"
+    }
+    
     var onSave: (Task) -> Void
     
     
@@ -20,6 +27,7 @@ struct TaskDetailView: View {
                 
                 Section {
                     TextField("Name", text: $viewModel.name)
+                        .autocorrectionDisabled()
                     DatePicker("Due date",
                                selection: $viewModel.dueDate,
                                in: Date()... ,
@@ -27,7 +35,7 @@ struct TaskDetailView: View {
                 }
                 Section {
                     Button(action: {
-                        if let task = viewModel.validate() {
+                        if let task = viewModel.validate(id: selectedTask?.id) {
                             onSave(task)
                             dismiss()
                         }
@@ -42,7 +50,12 @@ struct TaskDetailView: View {
                     }
                 }
             }
-            .navigationTitle("New task")
+            .navigationTitle(title)
+            .onAppear {
+                if let selectedTask = selectedTask {
+                    viewModel.loadData(task: selectedTask)
+                }
+            }
             
         }
     }

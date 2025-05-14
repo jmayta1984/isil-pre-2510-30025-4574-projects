@@ -11,6 +11,7 @@ import SwiftUI
 struct TodoCleanApp: App {
     var body: some Scene {
         WindowGroup {
+            TaskListView()
         }
     }
 }
