@@ -14,6 +14,10 @@ class LoginViewModel: ObservableObject {
     @Published var isLoggedIn = false
     
     func login() {
-        isLoggedIn = true
+        AuthService().login(request: LoginRequest(username: email, password: password)) { response, _ in
+            if let response = response {
+                self.isLoggedIn = true
+            }
+        }
     }
 }
