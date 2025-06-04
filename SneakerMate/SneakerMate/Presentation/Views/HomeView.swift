@@ -15,7 +15,8 @@ struct HomeView: View {
     
     @State var selectedCategory = "All"
     
-    @State var shoes = [Shoe]()
+    @StateObject var viewModel = HomeViewModel()
+   
     
     var body: some View {
         ScrollView { 
@@ -77,7 +78,7 @@ struct HomeView: View {
                 }
                 LazyVGrid (
                     columns: [GridItem(.flexible()),GridItem(.flexible()) ], spacing: 20) {
-                        ForEach(shoes) { shoe in
+                        ForEach(viewModel.shoes) { shoe in
                             ShoeCardView(shoe: shoe)
                         }
                         
@@ -87,9 +88,10 @@ struct HomeView: View {
                 Spacer()
             }
             .padding()
+            
         }
         .onAppear {
-            shoes = loadShoes()
+            viewModel.getShoes()
         }
     }
 }
@@ -101,11 +103,4 @@ struct HomeView: View {
     HomeView()
 }
 
-func loadShoes() -> [Shoe]{
-    guard let url = Bundle.main.url(forResource: "shoes", withExtension: "json"),
-          let data = try? Data(contentsOf: url),
-          let shoes = try? JSONDecoder().decode([Shoe].self, from: data) else {
-        return []
-    }
-    return shoes
-}
+

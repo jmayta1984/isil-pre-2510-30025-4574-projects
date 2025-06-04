@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Shoe: Identifiable, Decodable {
+struct Shoe: Identifiable {
     let id: Int
     let name: String
     let price: Int

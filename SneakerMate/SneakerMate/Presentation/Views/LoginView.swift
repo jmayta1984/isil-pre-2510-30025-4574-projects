@@ -17,14 +17,16 @@ struct LoginView: View {
             
             VStack (spacing: 20){
                 
-                TextField("Email", text: $viewModel.email)
-                    .keyboardType(.emailAddress)
-                    .textInputAutocapitalization(.none)
+                TextField("Username", text: $viewModel.username)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
                     .padding()
                     .background(Color(.systemGray6))
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                 
                 TextField("Password", text: $viewModel.password)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
                     .padding()
                     .background(Color(.systemGray6))
                     .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -52,7 +54,7 @@ struct LoginView: View {
             }
             .padding()
             .navigationDestination(isPresented: $viewModel.isLoggedIn) {
-               HomeView()
+               ContentView()
             }
         }
     }

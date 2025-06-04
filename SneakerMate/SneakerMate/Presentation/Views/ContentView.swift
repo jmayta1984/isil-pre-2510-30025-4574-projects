@@ -10,21 +10,22 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         TabView {
-            HomeView()
-                .tabItem {
-                    Image(systemName: "shoeprints.fill")
-                }
             
-            FavoriteListView()
-                .tabItem {
-                    Image(systemName: "heart.fill")
-                }
+            Tab("Home", systemImage: "shoeprints.fill") {
+                HomeView()
+            }
+         
+            Tab("Favorites", systemImage: "heart.fill") {
+                FavoriteListView()
+            }
+          
+            Tab("Cart", systemImage: "cart.fill") {
+                CartView()
+            }
             
-            CartView()
-                .tabItem {
-                    Image(systemName: "cart.fill")
-                }
+      
         }
+        .navigationBarBackButtonHidden()
         .tint(.black)
     }
 }
