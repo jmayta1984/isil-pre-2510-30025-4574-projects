@@ -13,19 +13,30 @@ struct ShoeCardView: View {
     var body: some View {
         VStack (alignment: .leading){
             
-            AsyncImage(url: URL(string: shoe.image), content: { image in
-                image
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 120, height: 120)
-                    .frame(maxWidth: .infinity)
-                
-            }, placeholder: {
-                ProgressView()
-                    .frame(width: 120, height: 120)
-                    .frame(maxWidth: .infinity)
-
-            })
+            
+            AsyncImage(url: URL(string: shoe.image)){ phase in
+                switch phase {
+                case .empty:
+                    ProgressView()
+                        .frame(width: 120, height: 120)
+                        .frame(maxWidth: .infinity)
+                case .success(let image):
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 120, height: 120)
+                        .frame(maxWidth: .infinity)
+                case .failure:
+                    Image(systemName: "shoe")
+                        .frame(width: 120, height: 120)
+                        .frame(maxWidth: .infinity)
+                @unknown default:
+                    EmptyView()
+                        .frame(width: 120, height: 120)
+                        .frame(maxWidth: .infinity)
+                }
+            }
+           
                 
             Text(shoe.name)
                 .font(.subheadline)

@@ -11,13 +11,16 @@ class LoginViewModel: ObservableObject {
     
     @Published var username = ""
     @Published var password = ""
-    @Published var isLoggedIn = false
+    @Published var state: UIState<User> = .idle
     
     func login() {
-        AuthService().login(request: LoginRequest(username: username, password: password)) { response, _ in
-            DispatchQueue.main.async{
-                if let _ = response {
-                    self.isLoggedIn = true
+        state = .loading
+        AuthService().login(request: LoginRequestDTO(username: username, password: password)) { user, message in
+            DispatchQueue.main.async {
+                if let user = user {
+                    self.state = .success(user)
+                } else  {
+                    self.state = .failure(message ?? "Unknown error")
                 }
             }
         }

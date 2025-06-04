@@ -5,7 +5,7 @@
 //  Created by user272495 on 5/27/25.
 //
 
-struct LoginRequest: Encodable {
+struct LoginRequestDTO: Encodable {
     let username: String
     let password: String
 }

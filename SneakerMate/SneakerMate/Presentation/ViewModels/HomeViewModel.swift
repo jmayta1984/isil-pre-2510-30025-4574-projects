@@ -8,16 +8,16 @@
 import Foundation
 
 class HomeViewModel: ObservableObject {
-    @Published var shoes = [Shoe]()
-    @Published var erroMessage: String? = nil
+    @Published var state: UIState<[Shoe]> = .idle
     
     func getShoes() {
+        state = .loading
         ShoeService().getShoes { shoes, message in
             DispatchQueue.main.async {
                 if let shoes = shoes {
-                    self.shoes = shoes
+                    self.state = .success(shoes)
                 } else  {
-                    self.erroMessage = message
+                    self.state = .failure(message ?? "Unknown error")
                 }
             }
            

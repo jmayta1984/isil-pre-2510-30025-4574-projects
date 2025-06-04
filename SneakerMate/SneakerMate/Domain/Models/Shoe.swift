@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Shoe: Identifiable {
+struct Shoe: Identifiable, Equatable {
     let id: Int
     let name: String
     let price: Int

@@ -9,10 +9,10 @@ import Foundation
 
 class HttpRequestHelper {
     
-    func POST<T: Encodable>(url: String, request: T, completion: @escaping(Bool, Data?, String?) -> Void) {
+    func POST<T: Encodable>(url: String, request: T, completion: @escaping(Data?, String?) -> Void) {
         guard let url = URL(string: url) else {
             print("Error: cannot create URL")
-            completion(false, nil, "Error: cannot create URL" )
+            completion(nil, "Error: cannot create URL" )
             return
         }
         
@@ -25,7 +25,7 @@ class HttpRequestHelper {
             urlRequest.httpBody = data
         } catch let encodingError {
             print("Error: \(encodingError)")
-            completion(false, nil, "Error: \(encodingError)")
+            completion(nil, "Error: \(encodingError)")
             return
         }
         
@@ -34,22 +34,22 @@ class HttpRequestHelper {
         session.dataTask(with: urlRequest) { data, response, error in
             guard error == nil else {
                 print("Error: problem calling POST")
-                completion(false, nil,"Error: problem calling POST" )
+                completion(nil,"Error: problem calling POST" )
                 return
             }
             
             guard let data = data else {
                 print("Error: no data")
-                completion(false, nil,"Error: no data" )
+                completion( nil,"Error: no data" )
                 return
             }
             
             guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
                 print("Error: HTTP request failed")
-                completion(false, data,"Error: HTTP request failed" )
+                completion(data,"Error: HTTP request failed" )
                 return
             }
-            completion(true, data, nil)
+            completion(data, nil)
         }.resume()
         
     }

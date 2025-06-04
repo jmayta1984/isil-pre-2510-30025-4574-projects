@@ -9,52 +9,74 @@ import SwiftUI
 
 struct LoginView: View {
     
-   @StateObject private var viewModel = LoginViewModel()
-    
+    @StateObject private var viewModel = LoginViewModel()
+    @State private var user: User? = nil
+    @State private var showErrorAlert = false
+    @State private var alertMessage = ""
+
     
     var body: some View {
         NavigationStack {
             
-            VStack (spacing: 20){
-                
-                TextField("Username", text: $viewModel.username)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled()
+            ZStack {
+                VStack (spacing: 20){
+                    
+                    TextField("Username", text: $viewModel.username)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    
+                    TextField("Password", text: $viewModel.password)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                        .padding()
+                        .background(Color(.systemGray6))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    
+                    Button(action: {
+                        viewModel.login()
+                    }) {
+                        Text("Sign in")
+                            .frame(maxWidth: .infinity)
+                    }
                     .padding()
-                    .background(Color(.systemGray6))
+                    .frame(maxWidth: .infinity)
+                    .background(Color.black)
+                    .foregroundStyle(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
-                
-                TextField("Password", text: $viewModel.password)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled()
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                
-                Button(action: {
-                    viewModel.login()
-                }) {
-                    Text("Sign in")
-                        .frame(maxWidth: .infinity)
+                    
+                    Button(action: {
+                    }) {
+                        Text("Sign up")
+                    }
+                    .foregroundStyle(.black)
                 }
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(Color.black)
-                .foregroundStyle(.white)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                
-                Button(action: {
-                }) {
-                    Text("Sign up")
+                .disabled(.loading == viewModel.state)
+                if case .loading = viewModel.state {
+                    ProgressView()
                 }
-                .foregroundStyle(.black)
-                
-                
-            
             }
             .padding()
-            .navigationDestination(isPresented: $viewModel.isLoggedIn) {
-               ContentView()
+            .onChange(of: viewModel.state){ oldValue, newValue in
+                switch newValue {
+                case .failure(let message):
+                    self.alertMessage = message
+                    self.showErrorAlert = true
+                case .success(let user):
+                    self.user = user
+                default :
+                    break
+                }
+            }
+            .alert("Error", isPresented: $showErrorAlert, actions: {
+                Button("OK", role: .cancel){}
+            }, message: {
+                Text(alertMessage)
+            })
+            .navigationDestination(item: $user) { user in
+                ContentView(user: user)
             }
         }
     }

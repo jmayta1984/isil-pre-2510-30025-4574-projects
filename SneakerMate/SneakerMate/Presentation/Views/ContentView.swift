@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    let user: User
     var body: some View {
         TabView {
             
@@ -26,10 +27,12 @@ struct ContentView: View {
       
         }
         .navigationBarBackButtonHidden()
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Text(user.firstName)
+            }
+        }
         .tint(.black)
     }
 }
 
-#Preview {
-    ContentView()
-}

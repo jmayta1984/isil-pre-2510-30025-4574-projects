@@ -16,10 +16,10 @@ struct HomeView: View {
     @State var selectedCategory = "All"
     
     @StateObject var viewModel = HomeViewModel()
-   
+    
     
     var body: some View {
-        ScrollView { 
+        ScrollView {
             VStack (alignment:.leading ,spacing: 20){
                 
                 HStack {
@@ -76,15 +76,20 @@ struct HomeView: View {
                         }
                     }
                 }
-                LazyVGrid (
-                    columns: [GridItem(.flexible()),GridItem(.flexible()) ], spacing: 20) {
-                        ForEach(viewModel.shoes) { shoe in
-                            ShoeCardView(shoe: shoe)
-                        }
-                        
-                        
-                    }
                 
+                switch viewModel.state {
+                case .idle, .loading:
+                    ProgressView()
+                case .success(let shoes):
+                    LazyVGrid (
+                        columns: [GridItem(.flexible()),GridItem(.flexible()) ], spacing: 20) {
+                            ForEach(shoes) { shoe in
+                                ShoeCardView(shoe: shoe)
+                            }
+                        }
+                case .failure(let string):
+                    Text(string)
+                }
                 Spacer()
             }
             .padding()
