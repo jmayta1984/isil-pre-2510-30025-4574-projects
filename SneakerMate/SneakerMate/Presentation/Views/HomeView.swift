@@ -17,6 +17,7 @@ struct HomeView: View {
     
     @StateObject var viewModel = HomeViewModel()
     
+    @State var selectedShoe: Shoe? = nil
     
     var body: some View {
         ScrollView {
@@ -85,6 +86,9 @@ struct HomeView: View {
                         columns: [GridItem(.flexible()),GridItem(.flexible()) ], spacing: 20) {
                             ForEach(shoes) { shoe in
                                 ShoeCardView(shoe: shoe)
+                                    .onTapGesture {
+                                        selectedShoe = shoe
+                                    }
                             }
                         }
                 case .failure(let string):
@@ -97,6 +101,9 @@ struct HomeView: View {
         }
         .onAppear {
             viewModel.getShoes()
+        }
+        .navigationDestination(item: $selectedShoe) { shoe in
+            ShoeDetailView(shoe: shoe)
         }
     }
 }
