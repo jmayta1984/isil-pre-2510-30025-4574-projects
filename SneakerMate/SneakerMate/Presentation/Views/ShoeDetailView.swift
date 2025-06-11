@@ -13,7 +13,6 @@ struct ShoeDetailView: View {
     
     var body: some View {
         VStack (
-            
             alignment: .leading, spacing: 10){
                 ZStack (alignment: .topTrailing){
                     AsyncImage(url: URL(string: shoe.image)){ phase in
@@ -46,7 +45,7 @@ struct ShoeDetailView: View {
                             .foregroundStyle(.black)
                             .frame(width: 20, height: 20)
                     }
-
+                    
                 }
                 
                 
@@ -93,7 +92,8 @@ struct ShoeDetailView: View {
                         .foregroundStyle(.white)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
-                .padding(.bottom, 16)
             }
     }
+
 }
+
