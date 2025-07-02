@@ -8,31 +8,36 @@
 import SwiftUI
 
 struct ContentView: View {
-    let user: User
+    @EnvironmentObject var authViewModel: AuthViewModel
+    @StateObject var favoritesViewModel = FavoritesViewModel()
     var body: some View {
-        TabView {
-            
-            Tab("Home", systemImage: "shoeprints.fill") {
-                HomeView()
-            }
-         
-            Tab("Favorites", systemImage: "heart.fill") {
-                FavoritesView()
-            }
+        NavigationStack {
+            TabView {
+                
+                Tab("Home", systemImage: "shoeprints.fill") {
+                    HomeView()
+                }
+             
+                Tab("Favorites", systemImage: "heart.fill") {
+                    FavoritesView()
+                }
+              
+                Tab("Cart", systemImage: "cart.fill") {
+                    CartView()
+                }
+                
           
-            Tab("Cart", systemImage: "cart.fill") {
-                CartView()
             }
-            
-      
-        }
-        .navigationBarBackButtonHidden()
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Text(user.firstName)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    if let user = authViewModel.user {
+                        Text(user.name)
+                    }
+                }
             }
+            .tint(.black)
         }
-        .tint(.black)
+        .environmentObject(favoritesViewModel)
     }
 }
 

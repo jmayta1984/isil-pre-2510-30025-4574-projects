@@ -12,7 +12,7 @@ class HomeViewModel: ObservableObject {
     
     func getShoes() {
         state = .loading
-        ShoeService().getShoes { shoes, message in
+        ShoeService.shared.getShoes { shoes, message in
             DispatchQueue.main.async {
                 if let shoes = shoes {
                     self.state = .success(shoes)
@@ -21,6 +21,24 @@ class HomeViewModel: ObservableObject {
                 }
             }
            
+        }
+    }
+    
+    func getShoeSizes(id: Int) -> [ShoeSize] {
+        switch state {
+        case .idle:
+            return []
+        case .loading:
+            return []
+        case .success(let t):
+            if let shoe = t.first(where: { shoe in
+                shoe.id == id
+            }) {
+                return shoe.sizes
+            }
+            return []
+        case .failure(let string):
+            return []
         }
     }
 }

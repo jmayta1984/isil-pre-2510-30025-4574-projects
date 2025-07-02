@@ -13,6 +13,6 @@ struct UserDTO: Decodable {
     let image: String
     
     func toDomain() -> User {
-        User(id: id, username: username, firstName: firstName, lastName: lastName, image: image)
+        User(id: id, username: username, name: "\(firstName) \(lastName)", image: image)
     }
 }

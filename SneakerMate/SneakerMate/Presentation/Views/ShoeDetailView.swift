@@ -10,6 +10,8 @@ import SwiftUI
 struct ShoeDetailView: View {
     let shoe: Shoe
     @State var selectedSize: ShoeSize? = nil
+    @State var isFavorite = false
+    @EnvironmentObject var favoritesViewModel: FavoritesViewModel
     
     var body: some View {
         VStack (
@@ -38,9 +40,10 @@ struct ShoeDetailView: View {
                         }
                     }
                     Button {
-                        
+                        favoritesViewModel.toggleFavorite(shoe: shoe)
+                        isFavorite.toggle()
                     } label: {
-                        Image(systemName: "heart")
+                        Image(systemName: isFavorite ? "heart.fill" : "heart")
                             .resizable()
                             .foregroundStyle(.black)
                             .frame(width: 20, height: 20)
@@ -92,6 +95,10 @@ struct ShoeDetailView: View {
                         .foregroundStyle(.white)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
+            }
+            .padding()
+            .onAppear{
+                isFavorite = favoritesViewModel.checkFavorite(shoe: shoe)
             }
     }
 

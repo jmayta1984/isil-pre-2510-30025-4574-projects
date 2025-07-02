@@ -10,10 +10,9 @@ import SwiftUI
 struct LoginView: View {
     
     @StateObject private var viewModel = LoginViewModel()
-    @State private var user: User? = nil
     @State private var showErrorAlert = false
     @State private var alertMessage = ""
-
+    @EnvironmentObject var authViewModel: AuthViewModel
     
     var body: some View {
         NavigationStack {
@@ -28,9 +27,7 @@ struct LoginView: View {
                         .background(Color(.systemGray6))
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                     
-                    TextField("Password", text: $viewModel.password)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
+                    SecureField("Password", text: $viewModel.password)
                         .padding()
                         .background(Color(.systemGray6))
                         .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -65,7 +62,7 @@ struct LoginView: View {
                     self.alertMessage = message
                     self.showErrorAlert = true
                 case .success(let user):
-                    self.user = user
+                    authViewModel.login(user: user)
                 default :
                     break
                 }
@@ -75,9 +72,7 @@ struct LoginView: View {
             }, message: {
                 Text(alertMessage)
             })
-            .navigationDestination(item: $user) { user in
-                ContentView(user: user)
-            }
+
         }
     }
 }

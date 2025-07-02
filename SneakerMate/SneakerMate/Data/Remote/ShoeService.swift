@@ -8,6 +8,9 @@
 import Foundation
 
 class ShoeService {
+    static let shared = ShoeService()
+    private init() {}
+    
     func getShoes(completion: @escaping([Shoe]?, String?) -> Void) {
         let url = "https://sugary-wool-penguin.glitch.me/shoes"
         
